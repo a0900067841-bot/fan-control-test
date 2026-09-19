@@ -1,139 +1,118 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>循環扇控制系統</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>循環扇控制系統｜測試站</title>
 <style>
-:root{
-  --bg:#f3f7fb;--card:#fff;--line:#dfe8f1;--text:#17324d;--muted:#6f8294;
-  --blue:#2e8be6;--blue2:#5fb8ff;--green:#22b573;--red:#e85d68;--nav:#0e4d86;
-  --shadow:0 10px 30px rgba(35,79,122,.10);
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Noto Sans TC",sans-serif;
-}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eef7ff 0,#f7fbff 220px,#f3f7fb 100%);color:var(--text)}
-button,input,select{font:inherit}.hidden{display:none!important}
-.app{min-height:100vh}
-.topbar{height:58px;background:var(--nav);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:sticky;top:0;z-index:10;box-shadow:0 3px 12px rgba(0,0,0,.12)}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800}.brand-icon{width:34px;height:34px;border-radius:50%;background:#fff;color:var(--blue);display:grid;place-items:center;font-size:22px}.top-actions{display:flex;align-items:center;gap:10px;font-size:14px}.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:700;cursor:pointer}.btn-blue{background:var(--blue);color:#fff}.btn-green{background:var(--green);color:#fff}.btn-red{background:#fff0f1;color:#b8333f}.btn-light{background:#eef5fb;color:#31516f}.btn-outline{background:#fff;color:var(--nav);border:1px solid #c8d8e7}.btn:active{transform:translateY(1px)}
-.login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 20% 10%,#d9efff 0,transparent 30%),linear-gradient(180deg,#eff8ff,#f7fbff)}
-.login-card{width:min(430px,100%);background:#fff;border:1px solid #d9e9f7;border-radius:24px;box-shadow:var(--shadow);padding:30px}.login-logo{text-align:center}.login-logo .fan{font-size:72px;line-height:1}.login-logo h1{font-size:24px;margin:8px 0 4px}.sub{color:var(--muted);font-size:14px}.field{display:grid;gap:7px;margin:16px 0}.field label{font-weight:700;font-size:14px}.field input,.field select{width:100%;padding:13px 14px;border:1px solid #cfdeea;border-radius:12px;background:#fbfdff;font-size:16px}.login-card .btn{width:100%;margin-top:6px}.demo-note{margin-top:14px;padding:11px 12px;border-radius:12px;background:#eff7ff;color:#496a88;font-size:13px}
-.page{max-width:980px;margin:0 auto;padding:18px 14px 38px}.grid{display:grid;grid-template-columns:1.05fr 1.45fr;gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:18px}.card h2{font-size:18px;margin:0 0 14px}.status-card{text-align:center}.fan-orb{width:180px;height:180px;border-radius:50%;margin:8px auto 16px;background:radial-gradient(circle at 35% 30%,#bfe6ff,#67baf7 45%,#2386d8 75%);display:grid;place-items:center;color:#fff;font-size:94px;box-shadow:inset 0 0 0 10px rgba(255,255,255,.4),0 12px 28px rgba(46,139,230,.22)}.fan-orb.spin{animation:spin 1.5s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.status-line{display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800}.dot{width:10px;height:10px;border-radius:50%;background:#9fb2c3}.dot.on{background:var(--green);box-shadow:0 0 0 4px rgba(34,181,115,.12)}.small-info{margin-top:10px;color:var(--muted);font-size:14px}
-.control-group{margin-bottom:18px}.control-label{font-weight:800;margin-bottom:10px}.power-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice-row{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.choice{border:1px solid #d2dfeb;border-radius:12px;padding:11px 8px;background:#fff;font-weight:800;color:#36556f;cursor:pointer}.choice.active{background:linear-gradient(180deg,#49a7f3,#2386d8);color:#fff;border-color:#2386d8;box-shadow:0 6px 14px rgba(35,134,216,.18)}.timer-box{margin-top:10px;padding:11px 12px;border-radius:12px;background:#f2f8fd;color:#58748c;font-size:14px}
-.navtabs{display:flex;gap:8px;margin:14px 0 18px;overflow:auto}.tab{white-space:nowrap;border:0;background:#e9f2f9;color:#35536c;border-radius:999px;padding:9px 14px;font-weight:700;cursor:pointer}.tab.active{background:var(--nav);color:#fff}
-.table-card{overflow:hidden;padding:0}.table-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:560px}th,td{text-align:left;padding:12px 14px;border-bottom:1px solid #edf2f6;font-size:14px}th{background:#f6faff;color:#58718a}.pill{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:800;background:#e8f7ef;color:#188553}
-.admin-layout{display:grid;grid-template-columns:210px 1fr;gap:16px}.side{padding:10px}.side button{width:100%;text-align:left;border:0;background:transparent;padding:11px 12px;border-radius:10px;color:#43617a;font-weight:700;cursor:pointer}.side button.active{background:#e8f3fc;color:#0e5d9f}.setting-row{display:grid;grid-template-columns:1fr 170px;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid #edf2f6}.setting-row:last-child{border-bottom:0}.setting-row select,.setting-row input{padding:10px 11px;border:1px solid #ceddea;border-radius:10px}.switch{width:48px;height:28px;border-radius:20px;background:#cbd7e1;position:relative;cursor:pointer}.switch:after{content:"";position:absolute;width:22px;height:22px;border-radius:50%;background:#fff;top:3px;left:3px;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:.2s}.switch.on{background:var(--blue)}.switch.on:after{left:23px}.watermark-layer{position:fixed;inset:0;pointer-events:none;z-index:30;overflow:hidden;opacity:.055;display:none;transform:rotate(-18deg)}.watermark-layer.on{display:grid;grid-template-columns:repeat(4,1fr);gap:72px;padding:60px 20px}.watermark-layer span{white-space:nowrap;font-weight:800;color:#0b4f84}
-@media(max-width:760px){.topbar{height:54px;padding:0 12px}.brand{font-size:15px}.top-actions .role{display:none}.page{padding:12px 10px 30px}.grid{grid-template-columns:1fr}.fan-orb{width:138px;height:138px;font-size:72px}.choice-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.choice{padding:10px 3px;font-size:14px}.admin-layout{grid-template-columns:1fr}.side{display:flex;overflow:auto;gap:6px;padding:0}.side button{width:auto;white-space:nowrap;background:#edf5fb}.setting-row{grid-template-columns:1fr}.table-wrap{margin:0 -2px}.top-actions{gap:6px}.btn{padding:9px 12px}.watermark-layer.on{grid-template-columns:repeat(2,1fr);gap:58px 12px;font-size:13px}.login-card{padding:24px 20px}}
+:root{--blue:#2563eb;--blue2:#1d4ed8;--nav:#0f2f6f;--bg:#f4f8ff;--card:#fff;--text:#0f172a;--muted:#64748b;--line:#dbe5f3;--green:#16a34a;--red:#dc2626;--shadow:0 14px 40px rgba(15,47,111,.10)}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Noto Sans TC",Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select{font:inherit}.hidden{display:none!important}
+.topbar{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,var(--nav),#173f8f);color:#fff;padding:14px 18px;box-shadow:0 4px 20px rgba(15,47,111,.18)}
+.topbar-inner{max-width:1080px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:10px;font-weight:800}.brand .logo{font-size:26px}.nav-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nav-btn{border:0;background:rgba(255,255,255,.12);color:#fff;padding:9px 12px;border-radius:10px;font-weight:700}.nav-btn.active,.nav-btn:hover{background:#fff;color:var(--nav)}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 16px 50px}.card{background:var(--card);border:1px solid #e5edf7;border-radius:20px;box-shadow:var(--shadow);padding:20px}.login-card{max-width:500px;margin:55px auto}.title{font-size:28px;font-weight:900;margin:0 0 6px}.sub{color:var(--muted);margin:0 0 20px}
+label{display:block;font-weight:700;margin:13px 0 6px}.field{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 13px;background:#fff}
+.btn{border:0;border-radius:12px;padding:12px 14px;font-weight:800;cursor:pointer}.btn-primary{background:var(--blue);color:#fff}.btn-dark{background:#0f172a;color:#fff}.btn-soft{background:#eaf1ff;color:#1747a6}.btn-danger{background:#fee2e2;color:#b91c1c}.btn-green{background:#dcfce7;color:#166534}
+.row{display:flex;gap:10px;align-items:center}.grow{flex:1}.muted{color:var(--muted)}.small{font-size:13px}.notice{padding:13px 14px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;margin:12px 0}.notice.warn{background:#fff7ed;border-color:#fed7aa;color:#9a3412}.notice.ok{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.dashboard{display:grid;grid-template-columns:330px 1fr;gap:16px}.status-card{text-align:center}.fan-icon{font-size:112px;line-height:1;margin:10px 0 8px}.status-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;background:#dcfce7;color:#166534;font-weight:800}.dot{width:9px;height:9px;border-radius:50%;background:#22c55e}
+.metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}.metric{background:#f8fbff;border:1px solid #e5edf7;border-radius:14px;padding:12px}.metric b{display:block;font-size:22px;margin-top:4px}
+.section-title{font-size:20px;font-weight:900;margin:0 0 12px}.control-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.choice{padding:13px 8px;border:1px solid #d8e4f3;background:#f8fbff;color:#334155;border-radius:12px;font-weight:800}.choice.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.power-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}.power-on{background:#dcfce7;color:#166534}.power-off{background:#fee2e2;color:#b91c1c}
+.sep{height:1px;background:#edf2f7;margin:18px 0}.log-list{display:grid;gap:9px}.log-item{border:1px solid #e5edf7;background:#fbfdff;border-radius:12px;padding:11px 12px}.log-meta{font-size:12px;color:#94a3b8;margin-top:3px}
+.admin-layout{display:grid;grid-template-columns:220px 1fr;gap:16px}.side{display:grid;gap:8px;align-content:start}.side button{border:0;text-align:left;padding:11px 12px;border-radius:11px;background:#eef4ff;color:#24447f;font-weight:800}.side button.active{background:var(--blue);color:#fff}
+.table{width:100%;border-collapse:collapse;font-size:14px}.table th,.table td{padding:10px;border-bottom:1px solid #edf2f7;text-align:left;vertical-align:top}.table th{color:#64748b}
+.qr-box{text-align:center;padding:18px;border:1px dashed #b9c9df;border-radius:16px;background:#fbfdff}.qr-box img{width:190px;height:190px;border-radius:10px;background:#fff;border:8px solid #fff}
+.wm{position:fixed;right:12px;bottom:10px;z-index:50;pointer-events:none;font-size:12px;color:#0f172a;opacity:.35;font-weight:800}
+.modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.55);display:grid;place-items:center;z-index:100;padding:16px}.modal{max-width:520px;width:100%;background:#fff;border-radius:18px;padding:20px;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.tabs{display:flex;gap:8px;margin-bottom:16px}.tabs button{flex:1;border:0;padding:10px;border-radius:10px;background:#eef4ff;font-weight:800;color:#24447f}.tabs button.active{background:var(--blue);color:white}
+@media(max-width:780px){.dashboard,.admin-layout{grid-template-columns:1fr}.control-grid{grid-template-columns:repeat(2,1fr)}.topbar-inner{align-items:flex-start}.wrap{padding-top:16px}.side{grid-template-columns:repeat(2,1fr)}.side button{text-align:center}.fan-icon{font-size:92px}}
 </style>
 </head>
 <body>
-<div id="loginView" class="login-wrap">
-  <div class="login-card">
-    <div class="login-logo">
-      <div class="fan">🌀</div>
-      <h1>循環扇控制系統</h1>
-      <div class="sub">簡單・安全・好管理</div>
-    </div>
-    <div class="field"><label>帳號</label><input id="account" placeholder="輸入帳號" value="user01"></div>
-    <div class="field"><label>密碼</label><input id="password" type="password" placeholder="輸入密碼" value="12345678"></div>
-    <button id="loginBtn" type="button" class="btn btn-blue">一般使用者登入</button>
-    <button id="adminDemoBtn" type="button" class="btn btn-light">管理員測試登入</button>
-    <div id="loginMsg" class="demo-note">測試帳號已預填。一般使用者：user01 / 12345678；管理員可直接按「管理員測試登入」。</div>
+<header class="topbar hidden" id="topbar"><div class="topbar-inner"><div class="brand"><span class="logo">🌀</span><span>循環扇控制系統</span></div><div class="nav-actions"><button class="nav-btn active" data-nav="home">首頁</button><button class="nav-btn" data-nav="logs" id="logsNav">使用紀錄</button><button class="nav-btn hidden" data-nav="admin" id="adminNav">管理後台</button><span id="who" class="small"></span><button class="nav-btn" id="logoutBtn">登出</button></div></div></header>
+<main class="wrap">
+<section id="loginView" class="card login-card">
+  <div class="title">🌀 循環扇控制系統</div><p class="sub">功能測試站｜不會真的控制硬體。</p>
+  <div class="tabs"><button class="active" id="tabLogin">一般登入</button><button id="tabRegister">註冊測試</button></div>
+  <div id="loginPane">
+    <label>Email</label><input class="field" id="email" type="email" value="user@example.com">
+    <label>密碼（6～10碼）</label><input class="field" id="password" type="password" value="123456">
+    <div class="row" style="margin-top:14px"><button class="btn btn-primary grow" id="userLogin">一般使用者登入</button><button class="btn btn-dark grow" id="adminLogin">管理員測試登入</button></div>
+    <p class="small muted">一般：user@example.com / 123456<br>管理員：admin@example.com / 123456</p>
+    <div class="sep"></div><button class="btn btn-soft" style="width:100%" id="tempSimBtn">模擬掃描「臨時使用者 QR Code」</button>
+  </div>
+  <div id="registerPane" class="hidden">
+    <label>Email（需認證）</label><input class="field" id="regEmail" type="email" placeholder="你的 Email">
+    <label>名稱／暱稱（3～5個字）</label><input class="field" id="regName" maxlength="5" placeholder="例如 小林店員">
+    <label>密碼（6～10碼）</label><input class="field" id="regPass" type="password" maxlength="10">
+    <div class="row" style="margin-top:12px"><button class="btn btn-soft grow" id="sendVerify">寄送驗證碼</button><input class="field grow" id="verifyCode" placeholder="測試碼 123456"></div>
+    <button class="btn btn-primary" style="width:100%;margin-top:12px" id="registerBtn">完成註冊</button><div id="regMsg" class="small muted" style="margin-top:10px"></div>
+  </div>
+</section>
+
+<section id="homeView" class="hidden">
+<div class="dashboard">
+  <div class="card status-card"><div class="status-pill"><span class="dot"></span><span>Fan-001 在線</span></div><div class="fan-icon" id="fanIcon">🌀</div><h2 id="fanState">已關閉</h2><div class="metric-grid"><div class="metric"><span class="muted small">目前風速</span><b id="speedText">0%</b></div><div class="metric"><span class="muted small">剩餘定時</span><b id="timerText">—</b></div></div></div>
+  <div class="card">
+    <h2 class="section-title">風扇控制</h2><div class="power-row"><button class="btn power-on" id="powerOn">開啟風扇</button><button class="btn power-off" id="powerOff">關閉風扇</button></div>
+    <h3>風速</h3><div class="control-grid" id="speedBtns"></div>
+    <div id="timerSection"><div class="sep"></div><h3>定時</h3><div class="control-grid" id="timerBtns"></div></div>
+    <div id="wifiSection"><div class="sep"></div><h3>風扇 Wi-Fi</h3><p class="muted small">一般使用者可先連 Fan-001-Setup，再從這裡設定風扇要連的外部 Wi-Fi。</p><button class="btn btn-soft" id="wifiBtn">設定風扇 Wi-Fi</button></div>
+    <div id="tempNotice" class="notice warn hidden">臨時使用者請先連線 <b>Fan-001-Setup</b>，才能操作風扇。臨時使用者無權限修改 Wi-Fi。<div><button class="btn btn-soft" style="margin-top:10px" id="tempWifiOk">我已連線</button></div></div>
   </div>
 </div>
+</section>
 
-<div id="appView" class="app hidden">
-  <header class="topbar">
-    <div class="brand"><div class="brand-icon">🌀</div><span>循環扇控制系統</span></div>
-    <div class="top-actions"><span id="who" class="role"></span><button id="logoutBtn" class="btn btn-outline">登出</button></div>
-  </header>
-  <div class="page">
-    <div class="navtabs">
-      <button class="tab active" data-view="home">首頁</button>
-      <button class="tab" data-view="public">使用紀錄</button>
-      <button id="adminTab" class="tab hidden" data-view="admin">管理後台</button>
-    </div>
+<section id="logsView" class="hidden"><div class="card"><h2 class="section-title">公開使用紀錄</h2><p class="muted">正式使用者可查看開／關與風速變更；臨時使用者無法查看。</p><div class="log-list" id="publicLogs"></div></div></section>
 
-    <section id="homeView">
-      <div class="grid">
-        <div class="card status-card">
-          <h2>裝置狀態</h2>
-          <div id="fanOrb" class="fan-orb">✣</div>
-          <div class="status-line"><span id="statusDot" class="dot"></span><span id="statusText">目前狀態：已關閉</span></div>
-          <div id="statusDetail" class="small-info">風速 0%・無定時</div>
-          <div class="small-info">裝置：Fan-001 ・ 模擬在線</div>
-        </div>
-        <div class="card">
-          <div class="control-group"><div class="control-label">風扇開關</div><div class="power-row"><button id="onBtn" class="btn btn-green">⏻ 開啟</button><button id="offBtn" class="btn btn-light">⏻ 關閉</button></div></div>
-          <div class="control-group"><div class="control-label">風速設定</div><div id="speedRow" class="choice-row"></div></div>
-          <div class="control-group"><div class="control-label">定時設定（分鐘）</div><div id="timerRow" class="choice-row"></div><div id="timerBox" class="timer-box">未設定定時</div></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="publicView" class="hidden">
-      <div class="card table-card"><div class="table-head"><div><b>公開使用紀錄</b><div class="sub">一般使用者可查看</div></div><span class="pill">PUBLIC</span></div><div class="table-wrap"><table><thead><tr><th>時間</th><th>使用者</th><th>操作內容</th></tr></thead><tbody id="publicRows"></tbody></table></div></div>
-    </section>
-
-    <section id="adminView" class="hidden">
-      <div class="admin-layout">
-        <div class="card side" id="adminMenu">
-          <button class="active" data-admin="dashboard">儀表板</button><button data-admin="users">使用者管理</button><button data-admin="watermark">浮水印設定</button><button data-admin="sound">提示音設定</button><button data-admin="wifi">Wi‑Fi 設定</button><button data-admin="logs">操作紀錄</button>
-        </div>
-        <div id="adminContent" class="card"></div>
-      </div>
-    </section>
-  </div>
+<section id="adminView" class="hidden">
+<div class="admin-layout">
+  <div class="card side"><button class="active" data-admin="dash">儀表板</button><button data-admin="users">使用者管理</button><button data-admin="temp">臨時使用者</button><button data-admin="qr">QR Code</button><button data-admin="settings">系統設定</button><button data-admin="adminlogs">完整紀錄</button></div>
+  <div class="card" id="adminContent"></div>
 </div>
-<div id="watermark" class="watermark-layer"></div>
+</section>
+</main>
+
+<div id="watermark" class="wm hidden"></div>
+
+<div class="modal-bg hidden" id="tempModal"><div class="modal"><h2 style="margin-top:0">臨時使用者加入</h2><div class="notice warn">請先連線風扇 Wi-Fi：<b>Fan-001-Setup</b></div><label>名稱／暱稱（3～5個字，必填）</label><input class="field" id="tempName" maxlength="5" placeholder="例如 小王同事"><p class="small muted">只能開／關風扇、調整風速；預設 2 小時後自動失效。</p><div class="row"><button class="btn btn-soft grow" id="cancelTemp">取消</button><button class="btn btn-primary grow" id="joinTemp">我已連線，加入</button></div></div></div>
+
+<div class="modal-bg hidden" id="wifiModal"><div class="modal"><h2 style="margin-top:0">設定風扇 Wi-Fi</h2><div class="notice">請先確認手機目前已連線 <b>Fan-001-Setup</b>。</div><label>選擇外部 Wi-Fi</label><select class="field" id="wifiSsid"><option>LONG_2F</option><option>店內 Wi-Fi</option><option>手機熱點</option></select><label>Wi-Fi 密碼</label><input class="field" id="wifiPass" type="password"><div class="row" style="margin-top:14px"><button class="btn btn-soft grow" id="cancelWifi">取消</button><button class="btn btn-primary grow" id="saveWifi">儲存並讓風扇連線</button></div></div></div>
+
 <script>
-const S={role:'user',account:'user01',fan:false,speed:0,timer:0,end:null,speeds:[25,50,75,100],timers:[1,15,30,60],public:[],admin:[],watermark:true,wmMode:'repeat'};
-const $=q=>document.querySelector(q), $$=q=>[...document.querySelectorAll(q)];
-function time(){return new Date().toLocaleString('zh-TW',{hour12:false})}
-function logPublic(action){S.public.unshift({t:time(),u:S.account,a:action});renderPublic()}
-function logAdmin(action){S.admin.unshift({t:time(),u:S.account,a:action});}
-function login(role){
-  try{
-    var accountEl=document.getElementById('account');
-    var passEl=document.getElementById('password');
-    var account=(accountEl && accountEl.value ? accountEl.value.trim() : '');
-    var password=(passEl && passEl.value ? passEl.value : '');
-    if(role==='user' && (!account || !password)){
-      document.getElementById('loginMsg').textContent='請輸入帳號與密碼。';
-      return;
-    }
-    S.role=role;
-    S.account= account || (role==='admin'?'admin':'user01');
-    document.getElementById('loginView').classList.add('hidden');
-    document.getElementById('appView').classList.remove('hidden');
-    document.getElementById('who').textContent=S.account+'（'+(role==='admin'?'管理員':'一般使用者')+'）';
-    document.getElementById('adminTab').classList.toggle('hidden',role!=='admin');
-    logAdmin('登入系統');
-    renderAll();
-  }catch(err){
-    var msg=document.getElementById('loginMsg');
-    if(msg) msg.textContent='登入模擬發生錯誤：'+err.message;
-  }
-}
-document.getElementById('loginBtn').addEventListener('click',function(){login('user')});
-document.getElementById('adminDemoBtn').addEventListener('click',function(){login('admin')});
-document.getElementById('password').addEventListener('keydown',function(e){if(e.key==='Enter')login('user')});
-document.getElementById('logoutBtn').addEventListener('click',function(){location.reload()});
-function setFan(on){if(S.fan===on)return;S.fan=on;if(on&&!S.speed)S.speed=50;if(!on){S.timer=0;S.end=null}logPublic(on?'開啟風扇':'關閉風扇');logAdmin(on?'開啟風扇':'關閉風扇');renderAll()}
-$('#onBtn').onclick=()=>setFan(true);$('#offBtn').onclick=()=>setFan(false);
-function setSpeed(v){const old=S.speed||0;S.speed=v;if(!S.fan)S.fan=true;logPublic(`調整風速（${old}% → ${v}%）`);logAdmin(`調整風速 ${old}% → ${v}%`);renderAll()}
-function setTimer(v){S.timer=v;S.end=Date.now()+v*60000;if(!S.fan){S.fan=true;if(!S.speed)S.speed=50}logAdmin(`設定定時 ${v} 分鐘`);renderAll()}
-function renderChoices(){const sr=$('#speedRow');sr.innerHTML='';S.speeds.forEach(v=>{const b=document.createElement('button');b.className='choice'+(S.speed===v?' active':'');b.textContent=v;b.onclick=()=>setSpeed(v);sr.appendChild(b)});const tr=$('#timerRow');tr.innerHTML='';S.timers.forEach(v=>{const b=document.createElement('button');b.className='choice'+(S.timer===v?' active':'');b.textContent=v;b.onclick=()=>setTimer(v);tr.appendChild(b)})}
-function renderStatus(){$('#fanOrb').classList.toggle('spin',S.fan);$('#statusDot').classList.toggle('on',S.fan);$('#statusText').textContent=`目前狀態：${S.fan?'運轉中':'已關閉'}`;$('#statusDetail').textContent=`風速 ${S.fan?S.speed:0}%・${S.timer?`定時 ${S.timer} 分鐘`:'無定時'}`;$('#timerBox').textContent=S.timer?'定時倒數中':'未設定定時'}
-function renderPublic(){const r=$('#publicRows');r.innerHTML=S.public.length?S.public.map(x=>`<tr><td>${x.t}</td><td>${x.u}</td><td>${x.a}</td></tr>`).join(''):'<tr><td colspan="3" class="sub">尚無使用紀錄</td></tr>'}
-function renderWatermark(){const w=$('#watermark');w.classList.toggle('on',S.watermark&&S.wmMode==='repeat');w.innerHTML=Array.from({length:20},()=>`<span>${S.account}｜${time()}</span>`).join('')}
-$$('.tab').forEach(b=>b.onclick=()=>{if(b.classList.contains('hidden'))return;$$('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');['home','public','admin'].forEach(v=>$(`#${v}View`).classList.add('hidden'));$(`#${b.dataset.view}View`).classList.remove('hidden');if(b.dataset.view==='admin')renderAdmin('dashboard')});
-$('#adminMenu').onclick=e=>{const b=e.target.closest('button');if(!b)return;$$('#adminMenu button').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderAdmin(b.dataset.admin)};
-function renderAdmin(view){const c=$('#adminContent');if(view==='dashboard')c.innerHTML=`<h2>儀表板</h2><div class="setting-row"><span>裝置狀態</span><b>模擬在線</b></div><div class="setting-row"><span>目前風扇</span><b>${S.fan?'運轉中':'已關閉'}</b></div><div class="setting-row"><span>目前風速</span><b>${S.speed}%</b></div>`;if(view==='users')c.innerHTML=`<h2>使用者管理</h2><div class="table-wrap"><table><thead><tr><th>帳號</th><th>權限</th><th>狀態</th></tr></thead><tbody><tr><td>user01</td><td>一般使用者</td><td><span class="pill">已啟用</span></td></tr><tr><td>admin</td><td>管理員</td><td><span class="pill">已啟用</span></td></tr></tbody></table></div>`;if(view==='watermark')c.innerHTML=`<h2>浮水印設定</h2><div class="setting-row"><span>啟用浮水印</span><div id="wmSwitch" class="switch ${S.watermark?'on':''}"></div></div><div class="setting-row"><span>顯示方式</span><select id="wmMode"><option value="repeat">全畫面重複</option><option value="single">右下角單一顯示</option></select></div><div class="setting-row"><span>文字範例</span><b>${S.account}｜${time()}</b></div>`;if(view==='sound')c.innerHTML=`<h2>提示音設定</h2><div class="setting-row"><span>開啟風扇</span><b>嗶 1 聲</b></div><div class="setting-row"><span>關閉風扇</span><b>嗶 1 聲</b></div><div class="setting-row"><span>設定定時</span><b>嗶 1 聲</b></div><div class="setting-row"><span>管理員重設</span><b>嗶 2 聲</b></div>`;if(view==='wifi')c.innerHTML=`<h2>Wi‑Fi 設定</h2><div class="setting-row"><span>裝置模式</span><b>AP + STA</b></div><div class="setting-row"><span>目前狀態</span><b>模擬連線</b></div><div class="sub">正式版只允許管理員查看與修改 Wi‑Fi 設定。</div>`;if(view==='logs')c.innerHTML=`<h2>完整操作紀錄</h2><div class="table-wrap"><table><thead><tr><th>時間</th><th>使用者</th><th>內容</th></tr></thead><tbody>${S.admin.map(x=>`<tr><td>${x.t}</td><td>${x.u}</td><td>${x.a}</td></tr>`).join('')||'<tr><td colspan="3" class="sub">尚無紀錄</td></tr>'}</tbody></table></div>`;
-if(view==='watermark'){const sw=$('#wmSwitch');sw.onclick=()=>{S.watermark=!S.watermark;sw.classList.toggle('on',S.watermark);renderWatermark()};const mode=$('#wmMode');mode.value=S.wmMode;mode.onchange=()=>{S.wmMode=mode.value;renderWatermark()}}
-}
-function renderAll(){renderChoices();renderStatus();renderPublic();renderWatermark()}
-setInterval(()=>{if(S.end&&Date.now()>=S.end){S.end=null;S.timer=0;S.fan=false;logPublic('定時結束，自動關閉風扇');logAdmin('定時結束，自動關閉風扇');renderAll()}if(!$('#appView').classList.contains('hidden'))renderWatermark()},1000);
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const S={role:null,email:'',name:'',fan:false,speed:0,timer:0,timerEnd:0,tempWifi:false,tempMinutes:Number(localStorage.getItem('tempMinutes')||120),publicLogs:JSON.parse(localStorage.getItem('pubLogs')||'[]'),adminLogs:JSON.parse(localStorage.getItem('admLogs')||'[]'),temps:JSON.parse(localStorage.getItem('temps')||'[]'),users:JSON.parse(localStorage.getItem('users')||JSON.stringify([{email:'user@example.com',name:'一般用戶',verified:true,approved:true},{email:'admin@example.com',name:'系統管理',verified:true,approved:true}]))};
+const speedOpts=[25,50,75,100], timerOpts=[1,15,30,60];
+function now(){return new Date().toLocaleString('zh-TW',{hour12:false})}
+function save(){localStorage.setItem('pubLogs',JSON.stringify(S.publicLogs));localStorage.setItem('admLogs',JSON.stringify(S.adminLogs));localStorage.setItem('temps',JSON.stringify(S.temps));localStorage.setItem('users',JSON.stringify(S.users));localStorage.setItem('tempMinutes',String(S.tempMinutes))}
+function adm(a){S.adminLogs.unshift({time:now(),who:S.name||S.email||'系統',action:a});S.adminLogs=S.adminLogs.slice(0,100);save()}
+function pub(a){S.publicLogs.unshift({time:now(),who:S.name||S.email,action:a});S.publicLogs=S.publicLogs.slice(0,50);save()}
+function validName(v){return [...v.trim()].length>=3&&[...v.trim()].length<=5}
+function show(id){['loginView','homeView','logsView','adminView'].forEach(x=>$('#'+x).classList.add('hidden'));$('#'+id).classList.remove('hidden')}
+function login(role,email,name){S.role=role;S.email=email;S.name=name;$('#topbar').classList.remove('hidden');$('#watermark').classList.remove('hidden');$('#who').textContent=`${name}・${role==='admin'?'管理員':role==='temp'?'臨時':'一般'}`;$('#adminNav').classList.toggle('hidden',role!=='admin');$('#logsNav').classList.toggle('hidden',role==='temp');$('#timerSection').classList.toggle('hidden',role==='temp');$('#wifiSection').classList.toggle('hidden',role==='temp');$('#tempNotice').classList.toggle('hidden',role!=='temp');$('#watermark').textContent=`${name}｜${now()}`;adm(`登入系統（${role}）`);renderControls();show('homeView');setNav('home')}
+function setNav(v){$$('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===v));if(v==='home')show('homeView');if(v==='logs'&&S.role!=='temp'){renderPublic();show('logsView')}if(v==='admin'&&S.role==='admin'){renderAdmin('dash');show('adminView')}}
+$$('[data-nav]').forEach(b=>b.onclick=()=>setNav(b.dataset.nav));$('#logoutBtn').onclick=()=>location.reload();
+$('#tabLogin').onclick=()=>{$('#loginPane').classList.remove('hidden');$('#registerPane').classList.add('hidden');$('#tabLogin').classList.add('active');$('#tabRegister').classList.remove('active')};$('#tabRegister').onclick=()=>{$('#registerPane').classList.remove('hidden');$('#loginPane').classList.add('hidden');$('#tabRegister').classList.add('active');$('#tabLogin').classList.remove('active')};
+$('#sendVerify').onclick=()=>$('#regMsg').textContent='測試站已「寄送」驗證碼：123456';
+$('#registerBtn').onclick=()=>{const e=$('#regEmail').value.trim(),n=$('#regName').value.trim(),p=$('#regPass').value,c=$('#verifyCode').value.trim();if(!e.includes('@'))return $('#regMsg').textContent='請輸入有效 Email';if(!validName(n))return $('#regMsg').textContent='名稱需 3～5 個字';if(p.length<6||p.length>10)return $('#regMsg').textContent='密碼需 6～10 碼';if(c!=='123456')return $('#regMsg').textContent='驗證碼錯誤（測試碼 123456）';S.users.push({email:e,name:n,verified:true,approved:false});save();$('#regMsg').textContent='註冊完成，等待管理員開權限。'};
+$('#userLogin').onclick=()=>{const e=$('#email').value.trim(),p=$('#password').value;if(e!=='user@example.com'||p!=='123456')return alert('測試帳號：user@example.com / 123456');login('user',e,'一般用戶')};
+$('#adminLogin').onclick=()=>{const p=$('#password').value;if(p!=='123456')return alert('測試密碼 123456');login('admin','admin@example.com','系統管理')};
+$('#tempSimBtn').onclick=()=>$('#tempModal').classList.remove('hidden');$('#cancelTemp').onclick=()=>$('#tempModal').classList.add('hidden');
+$('#joinTemp').onclick=()=>{const n=$('#tempName').value.trim();if(!validName(n))return alert('名稱需 3～5 個字');const exp=Date.now()+S.tempMinutes*60000;S.temps.unshift({name:n,created:now(),expires:new Date(exp).toLocaleString('zh-TW',{hour12:false}),active:true});save();$('#tempModal').classList.add('hidden');S.tempWifi=true;login('temp','',n);adm(`臨時使用者建立：${n}，有效 ${S.tempMinutes} 分鐘`)};
+$('#tempWifiOk').onclick=()=>{S.tempWifi=true;$('#tempNotice').innerHTML='✅ 已確認連線 Fan-001-Setup。你可以操作開／關與風速。'};
+function renderControls(){$('#speedBtns').innerHTML=speedOpts.map(v=>`<button class="choice ${S.speed===v?'active':''}" data-speed="${v}">${v}%</button>`).join('');$$('#speedBtns [data-speed]').forEach(b=>b.onclick=()=>{const v=Number(b.dataset.speed),old=S.speed;S.speed=v;if(!S.fan)S.fan=true;pub(`風速 ${old||0}% → ${v}%`);adm(`調整風速 ${old||0}% → ${v}%`);renderControls()});$('#timerBtns').innerHTML=timerOpts.map(v=>`<button class="choice ${S.timer===v?'active':''}" data-t="${v}">${v} 分鐘</button>`).join('');$$('#timerBtns [data-t]').forEach(b=>b.onclick=()=>{if(S.role==='temp')return;S.timer=Number(b.dataset.t);S.timerEnd=Date.now()+S.timer*60000;if(!S.fan){S.fan=true;if(!S.speed)S.speed=50}adm(`設定定時 ${S.timer} 分鐘`);renderControls()});$('#fanState').textContent=S.fan?'運轉中':'已關閉';$('#speedText').textContent=(S.fan?S.speed:0)+'%';$('#fanIcon').style.opacity=S.fan?1:.35;renderTimerText()}
+function renderTimerText(){if(!S.timerEnd||S.role==='temp')return $('#timerText').textContent='—';const m=Math.max(0,Math.ceil((S.timerEnd-Date.now())/60000));$('#timerText').textContent=m?m+'分':'—'}
+$('#powerOn').onclick=()=>{if(S.role==='temp'&&!S.tempWifi)return alert('請先連線 Fan-001-Setup');if(!S.fan){S.fan=true;if(!S.speed)S.speed=50;pub('開啟風扇');adm('開啟風扇');renderControls()}};$('#powerOff').onclick=()=>{if(S.fan){S.fan=false;S.timer=0;S.timerEnd=0;pub('關閉風扇');adm('關閉風扇');renderControls()}};
+setInterval(()=>{if(S.role){$('#watermark').textContent=`${S.name}｜${now()}`;renderTimerText()}if(S.timerEnd&&Date.now()>=S.timerEnd){S.timerEnd=0;S.timer=0;S.fan=false;pub('定時結束，自動關閉風扇');adm('定時結束，自動關閉風扇');renderControls()}},1000);
+function renderPublic(){$('#publicLogs').innerHTML=S.publicLogs.length?S.publicLogs.map(x=>`<div class="log-item"><b>${x.who}</b> ${x.action}<div class="log-meta">${x.time}</div></div>`).join(''):'<div class="muted">尚無公開紀錄</div>'}
+$('#wifiBtn').onclick=()=>$('#wifiModal').classList.remove('hidden');$('#cancelWifi').onclick=()=>$('#wifiModal').classList.add('hidden');$('#saveWifi').onclick=()=>{const ssid=$('#wifiSsid').value;$('#wifiModal').classList.add('hidden');adm(`修改風扇 Wi-Fi：${ssid}`);alert(`模擬：Fan-001 已儲存 ${ssid}，之後會切換連線。`)};
+function renderAdmin(page){$$('.side [data-admin]').forEach(b=>b.classList.toggle('active',b.dataset.admin===page));const c=$('#adminContent');if(page==='dash')c.innerHTML=`<h2 class="section-title">管理員儀表板</h2><div class="metric-grid"><div class="metric"><span class="muted small">裝置</span><b>Fan-001</b></div><div class="metric"><span class="muted small">狀態</span><b style="color:#16a34a">在線</b></div><div class="metric"><span class="muted small">一般帳號</span><b>${S.users.length}</b></div><div class="metric"><span class="muted small">臨時使用者</span><b>${S.temps.length}</b></div></div>`;
+if(page==='users')c.innerHTML=`<h2 class="section-title">使用者管理</h2><table class="table"><tr><th>Email</th><th>名稱</th><th>Email認證</th><th>權限</th></tr>${S.users.map(u=>`<tr><td>${u.email}</td><td>${u.name}</td><td>${u.verified?'已認證':'未認證'}</td><td>${u.approved?'已開啟':'待審核'}</td></tr>`).join('')}</table>`;
+if(page==='temp')c.innerHTML=`<h2 class="section-title">臨時使用者</h2><label>預設有效時間（分鐘）</label><input class="field" id="tempMinAdmin" type="number" min="10" value="${S.tempMinutes}"><button class="btn btn-primary" style="margin-top:10px" id="saveTempMin">儲存</button><div class="sep"></div><table class="table"><tr><th>名稱</th><th>建立</th><th>到期</th></tr>${S.temps.map(t=>`<tr><td>${t.name}</td><td>${t.created}</td><td>${t.expires}</td></tr>`).join('')}</table>`;
+if(page==='qr'){const tempToken='TEMP-'+Date.now().toString(36).toUpperCase(),controlUrl='https://fan.example/control',tempUrl=`https://fan.example/temp?token=${tempToken}`;c.innerHTML=`<h2 class="section-title">QR Code</h2><div class="dashboard"><div class="qr-box"><h3>一般使用者控制頁</h3><img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(controlUrl)}"><p class="small muted">${controlUrl}</p><a class="btn btn-soft" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=800x800&data=${encodeURIComponent(controlUrl)}">開啟／下載 PNG</a></div><div class="qr-box"><h3>建立臨時使用者 QR Code</h3><img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(tempUrl)}"><p class="small muted">掃描後輸入暱稱（3～5字），預設 ${S.tempMinutes} 分鐘失效。</p><a class="btn btn-soft" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=800x800&data=${encodeURIComponent(tempUrl)}">開啟／下載 PNG</a></div></div><div class="notice">測試站 QR 目前使用示意網址；正式綁網域後再換成正式網址。</div>`}
+if(page==='settings')c.innerHTML=`<h2 class="section-title">系統設定</h2><h3>風速實際 PWM</h3><div class="control-grid"><input class="field" value="40"><input class="field" value="60"><input class="field" value="80"><input class="field" value="100"></div><div class="sep"></div><h3>浮水印</h3><div class="notice ok">帳號／暱稱 + 日期時間，右下角顯示。</div><h3>提示音</h3><div class="notice">開／關／定時：嗶 1 聲；管理員重設：嗶 2 聲。</div>`;
+if(page==='adminlogs')c.innerHTML=`<h2 class="section-title">完整管理紀錄</h2><div class="log-list">${S.adminLogs.length?S.adminLogs.map(x=>`<div class="log-item"><b>${x.who}</b> ${x.action}<div class="log-meta">${x.time}</div></div>`).join(''):'<div class="muted">尚無紀錄</div>'}</div>`;
+if(page==='temp'){$('#saveTempMin').onclick=()=>{S.tempMinutes=Number($('#tempMinAdmin').value)||120;save();adm(`修改臨時使用者預設有效時間為 ${S.tempMinutes} 分鐘`);alert('已儲存')}}}
+$$('.side [data-admin]').forEach(b=>b.onclick=()=>renderAdmin(b.dataset.admin));
 </script>
-</body>
-</html>
+</body></html>
