@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>循環扇控制系統</title>
+<style>
+:root{
+  --bg:#f3f7fb;--card:#fff;--line:#dfe8f1;--text:#17324d;--muted:#6f8294;
+  --blue:#2e8be6;--blue2:#5fb8ff;--green:#22b573;--red:#e85d68;--nav:#0e4d86;
+  --shadow:0 10px 30px rgba(35,79,122,.10);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Noto Sans TC",sans-serif;
+}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eef7ff 0,#f7fbff 220px,#f3f7fb 100%);color:var(--text)}
+button,input,select{font:inherit}.hidden{display:none!important}
+.app{min-height:100vh}
+.topbar{height:58px;background:var(--nav);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:sticky;top:0;z-index:10;box-shadow:0 3px 12px rgba(0,0,0,.12)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800}.brand-icon{width:34px;height:34px;border-radius:50%;background:#fff;color:var(--blue);display:grid;place-items:center;font-size:22px}.top-actions{display:flex;align-items:center;gap:10px;font-size:14px}.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:700;cursor:pointer}.btn-blue{background:var(--blue);color:#fff}.btn-green{background:var(--green);color:#fff}.btn-red{background:#fff0f1;color:#b8333f}.btn-light{background:#eef5fb;color:#31516f}.btn-outline{background:#fff;color:var(--nav);border:1px solid #c8d8e7}.btn:active{transform:translateY(1px)}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 20% 10%,#d9efff 0,transparent 30%),linear-gradient(180deg,#eff8ff,#f7fbff)}
+.login-card{width:min(430px,100%);background:#fff;border:1px solid #d9e9f7;border-radius:24px;box-shadow:var(--shadow);padding:30px}.login-logo{text-align:center}.login-logo .fan{font-size:72px;line-height:1}.login-logo h1{font-size:24px;margin:8px 0 4px}.sub{color:var(--muted);font-size:14px}.field{display:grid;gap:7px;margin:16px 0}.field label{font-weight:700;font-size:14px}.field input,.field select{width:100%;padding:13px 14px;border:1px solid #cfdeea;border-radius:12px;background:#fbfdff;font-size:16px}.login-card .btn{width:100%;margin-top:6px}.demo-note{margin-top:14px;padding:11px 12px;border-radius:12px;background:#eff7ff;color:#496a88;font-size:13px}
+.page{max-width:980px;margin:0 auto;padding:18px 14px 38px}.grid{display:grid;grid-template-columns:1.05fr 1.45fr;gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:18px}.card h2{font-size:18px;margin:0 0 14px}.status-card{text-align:center}.fan-orb{width:180px;height:180px;border-radius:50%;margin:8px auto 16px;background:radial-gradient(circle at 35% 30%,#bfe6ff,#67baf7 45%,#2386d8 75%);display:grid;place-items:center;color:#fff;font-size:94px;box-shadow:inset 0 0 0 10px rgba(255,255,255,.4),0 12px 28px rgba(46,139,230,.22)}.fan-orb.spin{animation:spin 1.5s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.status-line{display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800}.dot{width:10px;height:10px;border-radius:50%;background:#9fb2c3}.dot.on{background:var(--green);box-shadow:0 0 0 4px rgba(34,181,115,.12)}.small-info{margin-top:10px;color:var(--muted);font-size:14px}
+.control-group{margin-bottom:18px}.control-label{font-weight:800;margin-bottom:10px}.power-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice-row{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.choice{border:1px solid #d2dfeb;border-radius:12px;padding:11px 8px;background:#fff;font-weight:800;color:#36556f;cursor:pointer}.choice.active{background:linear-gradient(180deg,#49a7f3,#2386d8);color:#fff;border-color:#2386d8;box-shadow:0 6px 14px rgba(35,134,216,.18)}.timer-box{margin-top:10px;padding:11px 12px;border-radius:12px;background:#f2f8fd;color:#58748c;font-size:14px}
+.navtabs{display:flex;gap:8px;margin:14px 0 18px;overflow:auto}.tab{white-space:nowrap;border:0;background:#e9f2f9;color:#35536c;border-radius:999px;padding:9px 14px;font-weight:700;cursor:pointer}.tab.active{background:var(--nav);color:#fff}
+.table-card{overflow:hidden;padding:0}.table-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:560px}th,td{text-align:left;padding:12px 14px;border-bottom:1px solid #edf2f6;font-size:14px}th{background:#f6faff;color:#58718a}.pill{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:800;background:#e8f7ef;color:#188553}
+.admin-layout{display:grid;grid-template-columns:210px 1fr;gap:16px}.side{padding:10px}.side button{width:100%;text-align:left;border:0;background:transparent;padding:11px 12px;border-radius:10px;color:#43617a;font-weight:700;cursor:pointer}.side button.active{background:#e8f3fc;color:#0e5d9f}.setting-row{display:grid;grid-template-columns:1fr 170px;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid #edf2f6}.setting-row:last-child{border-bottom:0}.setting-row select,.setting-row input{padding:10px 11px;border:1px solid #ceddea;border-radius:10px}.switch{width:48px;height:28px;border-radius:20px;background:#cbd7e1;position:relative;cursor:pointer}.switch:after{content:"";position:absolute;width:22px;height:22px;border-radius:50%;background:#fff;top:3px;left:3px;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:.2s}.switch.on{background:var(--blue)}.switch.on:after{left:23px}.watermark-layer{position:fixed;inset:0;pointer-events:none;z-index:30;overflow:hidden;opacity:.055;display:none;transform:rotate(-18deg)}.watermark-layer.on{display:grid;grid-template-columns:repeat(4,1fr);gap:72px;padding:60px 20px}.watermark-layer span{white-space:nowrap;font-weight:800;color:#0b4f84}
+@media(max-width:760px){.topbar{height:54px;padding:0 12px}.brand{font-size:15px}.top-actions .role{display:none}.page{padding:12px 10px 30px}.grid{grid-template-columns:1fr}.fan-orb{width:138px;height:138px;font-size:72px}.choice-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.choice{padding:10px 3px;font-size:14px}.admin-layout{grid-template-columns:1fr}.side{display:flex;overflow:auto;gap:6px;padding:0}.side button{width:auto;white-space:nowrap;background:#edf5fb}.setting-row{grid-template-columns:1fr}.table-wrap{margin:0 -2px}.top-actions{gap:6px}.btn{padding:9px 12px}.watermark-layer.on{grid-template-columns:repeat(2,1fr);gap:58px 12px;font-size:13px}.login-card{padding:24px 20px}}
+</style>
+</head>
+<body>
+<div id="loginView" class="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="fan">🌀</div>
+      <h1>循環扇控制系統</h1>
+      <div class="sub">簡單・安全・好管理</div>
+    </div>
+    <div class="field"><label>帳號</label><input id="account" placeholder="輸入帳號" value="user01"></div>
+    <div class="field"><label>密碼</label><input id="password" type="password" placeholder="輸入密碼" value="12345678"></div>
+    <button id="loginBtn" type="button" class="btn btn-blue">一般使用者登入</button>
+    <button id="adminDemoBtn" type="button" class="btn btn-light">管理員測試登入</button>
+    <div id="loginMsg" class="demo-note">測試帳號已預填。一般使用者：user01 / 12345678；管理員可直接按「管理員測試登入」。</div>
+  </div>
+</div>
+
+<div id="appView" class="app hidden">
+  <header class="topbar">
+    <div class="brand"><div class="brand-icon">🌀</div><span>循環扇控制系統</span></div>
+    <div class="top-actions"><span id="who" class="role"></span><button id="logoutBtn" class="btn btn-outline">登出</button></div>
+  </header>
+  <div class="page">
+    <div class="navtabs">
+      <button class="tab active" data-view="home">首頁</button>
+      <button class="tab" data-view="public">使用紀錄</button>
+      <button id="adminTab" class="tab hidden" data-view="admin">管理後台</button>
+    </div>
+
+    <section id="homeView">
+      <div class="grid">
+        <div class="card status-card">
+          <h2>裝置狀態</h2>
+          <div id="fanOrb" class="fan-orb">✣</div>
+          <div class="status-line"><span id="statusDot" class="dot"></span><span id="statusText">目前狀態：已關閉</span></div>
+          <div id="statusDetail" class="small-info">風速 0%・無定時</div>
+          <div class="small-info">裝置：Fan-001 ・ 模擬在線</div>
+        </div>
+        <div class="card">
+          <div class="control-group"><div class="control-label">風扇開關</div><div class="power-row"><button id="onBtn" class="btn btn-green">⏻ 開啟</button><button id="offBtn" class="btn btn-light">⏻ 關閉</button></div></div>
+          <div class="control-group"><div class="control-label">風速設定</div><div id="speedRow" class="choice-row"></div></div>
+          <div class="control-group"><div class="control-label">定時設定（分鐘）</div><div id="timerRow" class="choice-row"></div><div id="timerBox" class="timer-box">未設定定時</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="publicView" class="hidden">
+      <div class="card table-card"><div class="table-head"><div><b>公開使用紀錄</b><div class="sub">一般使用者可查看</div></div><span class="pill">PUBLIC</span></div><div class="table-wrap"><table><thead><tr><th>時間</th><th>使用者</th><th>操作內容</th></tr></thead><tbody id="publicRows"></tbody></table></div></div>
+    </section>
+
+    <section id="adminView" class="hidden">
+      <div class="admin-layout">
+        <div class="card side" id="adminMenu">
+          <button class="active" data-admin="dashboard">儀表板</button><button data-admin="users">使用者管理</button><button data-admin="watermark">浮水印設定</button><button data-admin="sound">提示音設定</button><button data-admin="wifi">Wi‑Fi 設定</button><button data-admin="logs">操作紀錄</button>
+        </div>
+        <div id="adminContent" class="card"></div>
+      </div>
+    </section>
+  </div>
+</div>
+<div id="watermark" class="watermark-layer"></div>
+<script>
+const S={role:'user',account:'user01',fan:false,speed:0,timer:0,end:null,speeds:[25,50,75,100],timers:[1,15,30,60],public:[],admin:[],watermark:true,wmMode:'repeat'};
+const $=q=>document.querySelector(q), $$=q=>[...document.querySelectorAll(q)];
+function time(){return new Date().toLocaleString('zh-TW',{hour12:false})}
+function logPublic(action){S.public.unshift({t:time(),u:S.account,a:action});renderPublic()}
+function logAdmin(action){S.admin.unshift({t:time(),u:S.account,a:action});}
+function login(role){
+  try{
+    var accountEl=document.getElementById('account');
+    var passEl=document.getElementById('password');
+    var account=(accountEl && accountEl.value ? accountEl.value.trim() : '');
+    var password=(passEl && passEl.value ? passEl.value : '');
+    if(role==='user' && (!account || !password)){
+      document.getElementById('loginMsg').textContent='請輸入帳號與密碼。';
+      return;
+    }
+    S.role=role;
+    S.account= account || (role==='admin'?'admin':'user01');
+    document.getElementById('loginView').classList.add('hidden');
+    document.getElementById('appView').classList.remove('hidden');
+    document.getElementById('who').textContent=S.account+'（'+(role==='admin'?'管理員':'一般使用者')+'）';
+    document.getElementById('adminTab').classList.toggle('hidden',role!=='admin');
+    logAdmin('登入系統');
+    renderAll();
+  }catch(err){
+    var msg=document.getElementById('loginMsg');
+    if(msg) msg.textContent='登入模擬發生錯誤：'+err.message;
+  }
+}
+document.getElementById('loginBtn').addEventListener('click',function(){login('user')});
+document.getElementById('adminDemoBtn').addEventListener('click',function(){login('admin')});
+document.getElementById('password').addEventListener('keydown',function(e){if(e.key==='Enter')login('user')});
+document.getElementById('logoutBtn').addEventListener('click',function(){location.reload()});
+function setFan(on){if(S.fan===on)return;S.fan=on;if(on&&!S.speed)S.speed=50;if(!on){S.timer=0;S.end=null}logPublic(on?'開啟風扇':'關閉風扇');logAdmin(on?'開啟風扇':'關閉風扇');renderAll()}
+$('#onBtn').onclick=()=>setFan(true);$('#offBtn').onclick=()=>setFan(false);
+function setSpeed(v){const old=S.speed||0;S.speed=v;if(!S.fan)S.fan=true;logPublic(`調整風速（${old}% → ${v}%）`);logAdmin(`調整風速 ${old}% → ${v}%`);renderAll()}
+function setTimer(v){S.timer=v;S.end=Date.now()+v*60000;if(!S.fan){S.fan=true;if(!S.speed)S.speed=50}logAdmin(`設定定時 ${v} 分鐘`);renderAll()}
+function renderChoices(){const sr=$('#speedRow');sr.innerHTML='';S.speeds.forEach(v=>{const b=document.createElement('button');b.className='choice'+(S.speed===v?' active':'');b.textContent=v;b.onclick=()=>setSpeed(v);sr.appendChild(b)});const tr=$('#timerRow');tr.innerHTML='';S.timers.forEach(v=>{const b=document.createElement('button');b.className='choice'+(S.timer===v?' active':'');b.textContent=v;b.onclick=()=>setTimer(v);tr.appendChild(b)})}
+function renderStatus(){$('#fanOrb').classList.toggle('spin',S.fan);$('#statusDot').classList.toggle('on',S.fan);$('#statusText').textContent=`目前狀態：${S.fan?'運轉中':'已關閉'}`;$('#statusDetail').textContent=`風速 ${S.fan?S.speed:0}%・${S.timer?`定時 ${S.timer} 分鐘`:'無定時'}`;$('#timerBox').textContent=S.timer?'定時倒數中':'未設定定時'}
+function renderPublic(){const r=$('#publicRows');r.innerHTML=S.public.length?S.public.map(x=>`<tr><td>${x.t}</td><td>${x.u}</td><td>${x.a}</td></tr>`).join(''):'<tr><td colspan="3" class="sub">尚無使用紀錄</td></tr>'}
+function renderWatermark(){const w=$('#watermark');w.classList.toggle('on',S.watermark&&S.wmMode==='repeat');w.innerHTML=Array.from({length:20},()=>`<span>${S.account}｜${time()}</span>`).join('')}
+$$('.tab').forEach(b=>b.onclick=()=>{if(b.classList.contains('hidden'))return;$$('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');['home','public','admin'].forEach(v=>$(`#${v}View`).classList.add('hidden'));$(`#${b.dataset.view}View`).classList.remove('hidden');if(b.dataset.view==='admin')renderAdmin('dashboard')});
+$('#adminMenu').onclick=e=>{const b=e.target.closest('button');if(!b)return;$$('#adminMenu button').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderAdmin(b.dataset.admin)};
+function renderAdmin(view){const c=$('#adminContent');if(view==='dashboard')c.innerHTML=`<h2>儀表板</h2><div class="setting-row"><span>裝置狀態</span><b>模擬在線</b></div><div class="setting-row"><span>目前風扇</span><b>${S.fan?'運轉中':'已關閉'}</b></div><div class="setting-row"><span>目前風速</span><b>${S.speed}%</b></div>`;if(view==='users')c.innerHTML=`<h2>使用者管理</h2><div class="table-wrap"><table><thead><tr><th>帳號</th><th>權限</th><th>狀態</th></tr></thead><tbody><tr><td>user01</td><td>一般使用者</td><td><span class="pill">已啟用</span></td></tr><tr><td>admin</td><td>管理員</td><td><span class="pill">已啟用</span></td></tr></tbody></table></div>`;if(view==='watermark')c.innerHTML=`<h2>浮水印設定</h2><div class="setting-row"><span>啟用浮水印</span><div id="wmSwitch" class="switch ${S.watermark?'on':''}"></div></div><div class="setting-row"><span>顯示方式</span><select id="wmMode"><option value="repeat">全畫面重複</option><option value="single">右下角單一顯示</option></select></div><div class="setting-row"><span>文字範例</span><b>${S.account}｜${time()}</b></div>`;if(view==='sound')c.innerHTML=`<h2>提示音設定</h2><div class="setting-row"><span>開啟風扇</span><b>嗶 1 聲</b></div><div class="setting-row"><span>關閉風扇</span><b>嗶 1 聲</b></div><div class="setting-row"><span>設定定時</span><b>嗶 1 聲</b></div><div class="setting-row"><span>管理員重設</span><b>嗶 2 聲</b></div>`;if(view==='wifi')c.innerHTML=`<h2>Wi‑Fi 設定</h2><div class="setting-row"><span>裝置模式</span><b>AP + STA</b></div><div class="setting-row"><span>目前狀態</span><b>模擬連線</b></div><div class="sub">正式版只允許管理員查看與修改 Wi‑Fi 設定。</div>`;if(view==='logs')c.innerHTML=`<h2>完整操作紀錄</h2><div class="table-wrap"><table><thead><tr><th>時間</th><th>使用者</th><th>內容</th></tr></thead><tbody>${S.admin.map(x=>`<tr><td>${x.t}</td><td>${x.u}</td><td>${x.a}</td></tr>`).join('')||'<tr><td colspan="3" class="sub">尚無紀錄</td></tr>'}</tbody></table></div>`;
+if(view==='watermark'){const sw=$('#wmSwitch');sw.onclick=()=>{S.watermark=!S.watermark;sw.classList.toggle('on',S.watermark);renderWatermark()};const mode=$('#wmMode');mode.value=S.wmMode;mode.onchange=()=>{S.wmMode=mode.value;renderWatermark()}}
+}
+function renderAll(){renderChoices();renderStatus();renderPublic();renderWatermark()}
+setInterval(()=>{if(S.end&&Date.now()>=S.end){S.end=null;S.timer=0;S.fan=false;logPublic('定時結束，自動關閉風扇');logAdmin('定時結束，自動關閉風扇');renderAll()}if(!$('#appView').classList.contains('hidden'))renderWatermark()},1000);
+</script>
+</body>
+</html>
