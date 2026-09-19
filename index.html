@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>循環扇控制系統｜測試站</title>
 <style>
 :root{--blue:#2563eb;--blue2:#1d4ed8;--nav:#0f2f6f;--bg:#f4f8ff;--card:#fff;--text:#0f172a;--muted:#64748b;--line:#dbe5f3;--green:#16a34a;--red:#dc2626;--shadow:0 14px 40px rgba(15,47,111,.10)}
@@ -96,8 +99,18 @@ $$('[data-nav]').forEach(b=>b.onclick=()=>setNav(b.dataset.nav));$('#logoutBtn')
 $('#tabLogin').onclick=()=>{$('#loginPane').classList.remove('hidden');$('#registerPane').classList.add('hidden');$('#tabLogin').classList.add('active');$('#tabRegister').classList.remove('active')};$('#tabRegister').onclick=()=>{$('#registerPane').classList.remove('hidden');$('#loginPane').classList.add('hidden');$('#tabRegister').classList.add('active');$('#tabLogin').classList.remove('active')};
 $('#sendVerify').onclick=()=>$('#regMsg').textContent='測試站已「寄送」驗證碼：123456';
 $('#registerBtn').onclick=()=>{const e=$('#regEmail').value.trim(),n=$('#regName').value.trim(),p=$('#regPass').value,c=$('#verifyCode').value.trim();if(!e.includes('@'))return $('#regMsg').textContent='請輸入有效 Email';if(!validName(n))return $('#regMsg').textContent='名稱需 3～5 個字';if(p.length<6||p.length>10)return $('#regMsg').textContent='密碼需 6～10 碼';if(c!=='123456')return $('#regMsg').textContent='驗證碼錯誤（測試碼 123456）';if(S.users.some(u=>u.email.toLowerCase()===e.toLowerCase()))return $('#regMsg').textContent='這個 Email 已註冊';S.users.push({email:e,name:n,password:p,verified:true,approved:false,active:true,role:'user'});save();adm(`新帳號註冊等待審核：${n}（${e}）`);$('#regMsg').textContent='註冊完成，等待管理員開權限。'};
-$('#userLogin').onclick=()=>{const e=$('#email').value.trim(),p=$('#password').value,u=S.users.find(x=>x.email.toLowerCase()===e.toLowerCase());if(!u||u.password!==p)return alert('Email 或密碼錯誤');if(!u.verified)return alert('Email 尚未認證');if(!u.approved)return alert('帳號目前待管理員審核');if(u.active===false)return alert('帳號權限目前已停用');login(u.role==='admin'?'admin':'user',u.email,u.name)};
-$('#adminLogin').onclick=()=>{const p=$('#password').value;if(p!=='123456')return alert('測試密碼 123456');login('admin','admin@example.com','系統管理')};
+function getLoginUser(){
+  const e=$('#email').value.trim(),p=$('#password').value;
+  if(!e||!p){alert('請輸入 Email 與密碼');return null}
+  const u=S.users.find(x=>x.email.toLowerCase()===e.toLowerCase());
+  if(!u||u.password!==p){alert('Email 或密碼錯誤');return null}
+  if(!u.verified){alert('Email 尚未認證');return null}
+  if(!u.approved){alert('帳號目前待管理員審核');return null}
+  if(u.active===false){alert('帳號權限目前已停用');return null}
+  return u;
+}
+$('#userLogin').onclick=()=>{const u=getLoginUser();if(!u)return;if(u.role==='admin')return alert('這是管理員帳號，請使用「管理員登入」');login('user',u.email,u.name)};
+$('#adminLogin').onclick=()=>{const u=getLoginUser();if(!u)return;if(u.role!=='admin')return alert('此帳號沒有管理員權限');login('admin',u.email,u.name)};
 $('#tempSimBtn').onclick=()=>$('#tempModal').classList.remove('hidden');$('#cancelTemp').onclick=()=>$('#tempModal').classList.add('hidden');
 $('#joinTemp').onclick=()=>{const n=$('#tempName').value.trim();if(!validName(n))return alert('名稱需 3～5 個字');const exp=Date.now()+S.tempMinutes*60000;S.temps.unshift({name:n,created:now(),expires:new Date(exp).toLocaleString('zh-TW',{hour12:false}),active:true});save();$('#tempModal').classList.add('hidden');S.tempWifi=true;login('temp','',n);adm(`臨時使用者建立：${n}，有效 ${S.tempMinutes} 分鐘`)};
 $('#tempWifiOk').onclick=()=>{S.tempWifi=true;$('#tempNotice').innerHTML='✅ 已確認連線 Fan-001-Setup。你可以操作開／關與風速。'};
